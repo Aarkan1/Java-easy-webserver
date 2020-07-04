@@ -15,6 +15,7 @@ Entities used in the database must have EXACT same field names as column names i
 
 Query to database. The PreparedStatement gets automatically executed when lambda has been called.
 The lambda gets the statement as an argument to set parameters to the query.
+ResultSet from query gets auto mapped to target class.
 ```java
 // db.get returns list of objects, auto mapped to provided class 
 (List<class>) db.get(class, query, statement lambda); // lambda is optional if prepared statement isn't needed
