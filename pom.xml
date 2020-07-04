@@ -23,9 +23,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.Simonwep</groupId>
-            <artifactId>java-express</artifactId>
-            <version>0.1.1</version>
+            <groupId>com.github.Aarkan1</groupId>
+            <artifactId>express-java</artifactId>
+            <version>a1d4abd</version>
         </dependency>
 
         <dependency>

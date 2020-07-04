@@ -7,7 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.util.*;
 
 public class ObjectMapper<T> {
-
+  private boolean useColumnTagMapping = false; // change to true if using @Column to map fields in entity
   private Class clazz;
   private Map<String, Field> fields = new HashMap<>();
 
@@ -16,15 +16,18 @@ public class ObjectMapper<T> {
 
     List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
     for (Field field : fieldList) {
-      // Only map annotated fields
-//      Column col = field.getAnnotation(Column.class);
-//      if (col != null) {
-//        field.setAccessible(true);
-//        fields.put(col.value().isEmpty() ? field.getName() : col.value(), field);
-//      }
-
-      field.setAccessible(true);
-      fields.put(field.getName(), field);
+      if(useColumnTagMapping) {
+//         Only map annotated fields
+        Column col = field.getAnnotation(Column.class);
+        if (col != null) {
+          field.setAccessible(true);
+          fields.put(col.value().isEmpty() ? field.getName() : col.value(), field);
+        }
+      } else {
+//        Map all fields in entity
+        field.setAccessible(true);
+        fields.put(field.getName(), field);
+      }
     }
   }
 

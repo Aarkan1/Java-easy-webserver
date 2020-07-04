@@ -3,7 +3,7 @@
 Place all frontend files in the **/www** directory, with index.html at the root of that folder.
 
 ## Backend
-See https://github.com/Simonwep/java-express for details on the WebServer API.
+See https://github.com/Aarkan1/express-java for details on the WebServer API.
 
 ## Database
 Connecting to SQLite database. Creates new database file if it doesn't exist.
@@ -20,10 +20,10 @@ The lambda gets the statement as an argument to set parameters to the query.
 (List<class>) db.get(class, query, statement lambda); // lambda is optional if prepared statement isn't needed
 
 // returns a list of all users
-(List<User>) db.get(User.class, "SELECT * FROM users");
+(List<entities.User>) db.get(entities.User.class, "SELECT * FROM users");
  
 // returns a list of all users mathing statement
-(List<User>) db.get(User.class, "SELECT * FROM users WHERE username = ?", statement -> {
+(List<entities.User>) db.get(entities.User.class, "SELECT * FROM users WHERE username = ?", statement -> {
   statement.setString(1, "superman");
 });
 
@@ -40,7 +40,7 @@ long id = db.update("INSERT INTO users(username, age) VALUES(?,?)", statement ->
 ## Libraries used
 
 Express library:
-https://github.com/Simonwep/java-express
+https://github.com/Aarkan1/express-java
 
 SQLite Java: 
 https://www.sqlitetutorial.net/sqlite-java/
