@@ -41,7 +41,7 @@ app.post("/rest/users", (req, res) -> {
 ## Database
 Connecting to SQLite database. Creates new database file if it doesn't exist.
 ```java
-SQLiteDb db = new SQLiteDb("databaseName.db"); // defaults to "database.SQLiteDb"
+SQLiteDb db = new SQLiteDb("databaseName.db"); // defaults to "database.db"
 ```
 
 Entities used in the database must have EXACT same field names as column names in table.
