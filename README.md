@@ -5,6 +5,39 @@ Place all frontend files in the **/www** directory, with index.html at the root 
 ## Backend
 See https://github.com/Aarkan1/express-java for details on the WebServer API.
 
+Get all users
+```java
+app.get("/rest/users", (req, res) -> {
+  var users = (List<User>) db.get(User.class, "SELECT * FROM users");
+  res.json(users);
+});
+```
+
+Get one user on id
+```java
+app.get("/rest/users/:id", (req, res) -> {
+  var id = Long.parseLong(req.getParam("id"));
+  var user = (List<User>) db.get(User.class,
+    "SELECT * FROM users WHERE id = ?",
+    statement -> statement.setLong(1, id));
+  res.json(user.get(0));
+});
+```
+
+Post new user
+```java
+app.post("/rest/users", (req, res) -> {
+  var user = (User) req.getBody(User.class);
+  var id = db.update("INSERT INTO users(name, age) VALUES(?,?)", statement -> {
+    statement.setString(1, user.getName());
+    statement.setInt(2, user.getAge());
+  });
+
+  user.setId(id);
+  res.json(user);
+});
+```
+
 ## Database
 Connecting to SQLite database. Creates new database file if it doesn't exist.
 ```java
