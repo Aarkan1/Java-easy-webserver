@@ -5,6 +5,9 @@ import express.middleware.Middleware;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @SuppressWarnings("unchecked") // suppress type casting warnings
 public class Main {
@@ -17,7 +20,7 @@ public class Main {
 
     app.use(Middleware.cookieSession("f3v4", 60 * 60 * 24 * 7));
 
-    // authentication middleware
+    // app middleware
     app.use((req, res) -> {
       // get session cookie id to store in database for persisting sessions
 //      var cookie = req.getCookie("f3v4");
@@ -28,6 +31,9 @@ public class Main {
 //        var user = (entities.User) sessionCookie.getData();
 //        System.out.println("Session user: " + user.getUsername());
       }
+
+      // res.send() in a middleware cancels the chain (same as not doing next() in express)
+//      res.send("STOP RIGHT HERE");
     });
 
     try {

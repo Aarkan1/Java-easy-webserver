@@ -29,25 +29,36 @@ public class Rest {
 
     app.get("/rest/users/:id", (req, res) -> {
       var id = Long.parseLong(req.getParam("id"));
-      var user = (List<User>) db.get(User.class,
-              "SELECT * FROM users WHERE id = ?",
-              stmt -> stmt.setLong(1, id));
+      var user = (List<User>) db.get(User.class,"SELECT * FROM users WHERE id = ?", List.of(id));
+
       res.json(user.get(0));
     });
   }
 
   private void post() {
-    // db.update returns auto incremented id
+    // To set query parameters we can either add a list of values
+    // (this will automatically set right param and prevent SQL injection)
+    // Note: it's important that right variable type is passed in the list
+    // to properly set right parameter
     app.post("/rest/users", (req, res) -> {
+      // to get an instance of a specific class we must
+      // provide which class the body should convert to
       var user = (User) req.getBody(User.class);
-      var id = db.update("INSERT INTO users VALUES(null, ?, ?, ?)", stmt -> {
-        stmt.setString(1, user.getName());
-        stmt.setString(2, user.getUsername());
-        stmt.setString(3, user.getPassword());
-      });
 
+      // db.update returns auto incremented id after insertion.
+      var id = db.update("INSERT INTO users(name, username, password) VALUES(?, ?, ?)", List.of(user.getName(), user.getUsername(), user.getPassword()));
       user.setId(id);
+
       res.json(user);
     });
+
+    // or use a lambda to manually set the PreparedStatement parameters, like:
+    /*
+      var id = db.update("INSERT INTO users(name, username, password) VALUES(?, ?, ?)", statement -> {
+        statement.setString(1, user.getName());
+        statement.setString(2, user.getUsername());
+        statement.setString(3, user.getPassword());
+      });
+     */
   }
 }
