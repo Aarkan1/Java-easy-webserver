@@ -6,21 +6,51 @@ import java.util.List;
 
 public class SQLiteDb {
   private Connection conn;
+  private boolean useColumnTags = false;
+  private String databaseName = "database.db";
 
   public SQLiteDb() {
-    try {
-      conn = DriverManager.getConnection("jdbc:sqlite:" + Paths.get("database.db").toString());
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    connectToDb();
+  }
+
+  public SQLiteDb(boolean useColumnTags) {
+    this.useColumnTags = useColumnTags;
+    connectToDb();
   }
 
   public SQLiteDb(String databaseName) {
+    this.databaseName = databaseName;
+    connectToDb();
+  }
+
+  public SQLiteDb(String databaseName, boolean useColumnTags) {
+    this.databaseName = databaseName;
+    this.useColumnTags = useColumnTags;
+    connectToDb();
+  }
+
+  private void connectToDb() {
     try {
       conn = DriverManager.getConnection("jdbc:sqlite:" + Paths.get(databaseName).toString());
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
+
+  public List<?> get(Class klass, String query, List params) {
+    return get(klass, query, stmt -> {
+      for(int i = 0; i < params.size(); i++) {
+        setParam(stmt, i, params.get(i));
+      }
+    });
+  }
+
+  public long update(String query, List params) {
+    return update(query, stmt -> {
+      for(int i = 0; i < params.size(); i++) {
+        setParam(stmt, i, params.get(i));
+      }
+    });
   }
 
   public List<?> get(Class klass, String query, StatementHandler statementHandler) {
@@ -60,8 +90,48 @@ public class SQLiteDb {
     return 0;
   }
 
+  public void query(ConnectionHandler connectionHandler) {
+    connectionHandler.handler(conn);
+  }
+
   private List<?> convertToList(ResultSet rs, Class klass) {
-    ObjectMapper<?> objectMapper = new ObjectMapper<>(klass);
+    ObjectMapper<?> objectMapper = new ObjectMapper<>(klass, useColumnTags);
     return objectMapper.map(rs);
+  }
+
+  private void setParam(PreparedStatement stmt, int index, Object param) {
+    Class klass = param.getClass();
+    index++; // set statement parameters start on index 1
+    try {
+      if(klass == String.class) {
+        stmt.setString(index, (String) param);
+      } else if(klass == Integer.class) {
+        stmt.setInt(index, (Integer) param);
+      } else if(klass == Double.class) {
+        stmt.setDouble(index, (Double) param);
+      } else if(klass == Float.class) {
+        stmt.setFloat(index, (Float) param);
+      } else if(klass == Long.class) {
+        stmt.setLong(index, (Long) param);
+      } else if(klass == Boolean.class) {
+        stmt.setBoolean(index, (Boolean) param);
+      } else if(klass == Timestamp.class) {
+        stmt.setTimestamp(index, (Timestamp) param);
+      } else if(klass == Time.class) {
+        stmt.setTime(index, (Time) param);
+      } else if(klass == Date.class) {
+        stmt.setDate(index, (Date) param);
+      } else if(klass == Short.class) {
+        stmt.setShort(index, (Short) param);
+      } else if(klass == Byte.class) {
+        stmt.setByte(index, (Byte) param);
+      } else if(klass == Blob.class) {
+        stmt.setBlob(index, (Blob) param);
+      } else {
+        throw new SQLException("Variable type doesn't match any methods");
+      }
+    } catch(SQLException e) {
+      e.printStackTrace();
+    }
   }
 }

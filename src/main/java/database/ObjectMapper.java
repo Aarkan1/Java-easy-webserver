@@ -6,17 +6,17 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class ObjectMapper<T> {
-  private boolean useColumnTagMapping = false; // change to true if using @Column to map fields in entity
   private Class clazz;
   private Map<String, Field> fields = new HashMap<>();
 
-  public ObjectMapper(Class clazz) {
+  public ObjectMapper(Class clazz, boolean useColumnTags) {
     this.clazz = clazz;
 
     List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
     for (Field field : fieldList) {
-      if(useColumnTagMapping) {
+      if(useColumnTags) {
 //         Only map annotated fields
         Column col = field.getAnnotation(Column.class);
         if (col != null) {

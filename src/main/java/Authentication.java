@@ -50,8 +50,7 @@ public class Authentication {
       }
 
       var loginDto = (LoginDTO) req.getBody(LoginDTO.class);
-      var userFromDb = (List<User>) db.get(User.class, "SELECT * FROM users WHERE username = ?",
-              statement -> statement.setString(1, loginDto.username));
+      var userFromDb = (List<User>) db.get(User.class, "SELECT * FROM users WHERE username = ?", List.of(loginDto.username));
 
       if(userFromDb.size() < 1) {
         res.setStatus(Status._401);
@@ -80,8 +79,7 @@ public class Authentication {
         return;
       }
       var user = (User) req.getBody(User.class);
-      var userInDB = (List<User>) db.get(User.class, "SELECT * FROM users WHERE username = ?",
-              statement -> statement.setString(1, user.getUsername()));
+      var userInDB = (List<User>) db.get(User.class, "SELECT * FROM users WHERE username = ?", List.of(user.getUsername()));
 
       if(userInDB.size() > 0) {
         res.setStatus(Status._400);
@@ -92,11 +90,7 @@ public class Authentication {
       String hashedPassword = BCrypt.withDefaults().hashToString(10, user.getPassword().toCharArray());
       user.setPassword(hashedPassword);
 
-      var id = db.update("INSERT INTO users(name, username, password) VALUES(?, ?, ?)", stmt -> {
-        stmt.setString(1, user.getName());
-        stmt.setString(2, user.getUsername());
-        stmt.setString(3, user.getPassword());
-      });
+      var id = db.update("INSERT INTO users(name, username, password) VALUES(?, ?, ?)", List.of(user.getName(), user.getUsername(), user.getPassword()));
 
       user.setId(id); // update with incremented id
       sessionCookie.setData(user); // log in user with session
