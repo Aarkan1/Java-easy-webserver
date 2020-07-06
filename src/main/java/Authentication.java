@@ -90,7 +90,8 @@ public class Authentication {
       String hashedPassword = BCrypt.withDefaults().hashToString(10, user.getPassword().toCharArray());
       user.setPassword(hashedPassword);
 
-      var id = db.update("INSERT INTO users(name, username, password) VALUES(?, ?, ?)", List.of(user.getName(), user.getUsername(), user.getPassword()));
+      var id = db.update("INSERT INTO users(name, username, password) VALUES(?, ?, ?)",
+              List.of(user.getName(), user.getUsername(), user.getPassword()));
 
       user.setId(id); // update with incremented id
       sessionCookie.setData(user); // log in user with session

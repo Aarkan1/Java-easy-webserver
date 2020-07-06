@@ -5,9 +5,6 @@ import express.middleware.Middleware;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 @SuppressWarnings("unchecked") // suppress type casting warnings
 public class Main {
@@ -15,9 +12,11 @@ public class Main {
   public static void main(String[] args) {
     var db = new SQLiteDb("database.db");
     var app = new Express();
+
     new Authentication(app, db);
     new Rest(app, db);
 
+    // sets a unique cookie on each client to track authentication
     app.use(Middleware.cookieSession("f3v4", 60 * 60 * 24 * 7));
 
     // app middleware

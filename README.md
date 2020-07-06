@@ -40,9 +40,40 @@ app.post("/rest/users", (req, res) -> {
 Connecting to SQLite database. Creates new database file if it doesn't exist.
 ```java
 SQLiteDb db = new SQLiteDb("databaseName.db"); // defaults to "database.db"
+
+// we can pass a boolean toggling the use of @Column annotations 
+// in our entities to map property fields
+SQLiteDb db = new SQLiteDb("databaseName.db", true); // defaults to false
 ```
 
-Entities used in the database must have EXACT same field names as column names in table.
+SQLiteDb uses an ORM, ObjectMapper, to convert the entity from the database to a class you created.
+
+If we don't toggle the use of @Column to true entities used in the database must have EXACT same field names as column names in table.
+A variable not matching a column in the table will be null when the entity is fetched from the database.
+```java
+class User {
+  String username;
+  int age;
+
+  String[] hobbies;
+}
+```
+
+If you use @Column your entities fields will be tagged.
+If the variable name doesn't match the column in the table you can pass the columns name to @Column.
+If no value is passed the variable name MUST match the column in the table.
+Variables not tagged will be ignored when getting entities from the database.
+```java
+class User {
+  @Column("user_name")
+  String username;
+
+  @Column
+  int age;
+
+  String[] hobbies;
+}
+```
 
 Query to database. 
 
@@ -53,10 +84,10 @@ ResultSet from query gets auto mapped to target class.
 (List<class>) db.get(class, query, statement lambda); // lambda is optional if prepared statement isn't needed
 
 // returns a list of all users
-(List<entities.User>) db.get(entities.User.class, "SELECT * FROM users");
+(List<User>) db.get(User.class, "SELECT * FROM users");
  
 // returns a list of all users matching statement
-(List<entities.User>) db.get(entities.User.class, "SELECT * FROM users WHERE username = ?", List.of("superman"));
+(List<User>) db.get(User.class, "SELECT * FROM users WHERE username = ?", List.of("superman"));
 
 // db.update is used to query writes to the database, like INSERT, UPDATE and DELETE
 // and returns the auto incremented long number when INSERT
@@ -65,7 +96,8 @@ long id = db.update(query, statement lambda);
 
 // There's two ways to set query parameters:
 
-// (Recommended) Provide a list of values that will replace the "?" in the query at the same
+// (Recommended) 
+// Provide a list of values that will replace the "?" in the query at the same
 // index as the value in the list. (first value will replace the first "?", second will replace the second "?" etc..)
 // (this automatically prevents SQL injection)
 // NOTE: It's important that the value type matches the type of the column in database table!
@@ -106,6 +138,10 @@ db.query(connection -> {
     statement.setString(1, "superman");
 
     ResultSet resultSet = statement.executeQuery();
+
+    while(resultSet.next()) {
+      System.out.println(resultSet.getString("username"));
+    }
   } catch (SQLException e) {
     e.printStackTrace();
   }
