@@ -1,6 +1,7 @@
 # Java express-like webserver
 ## Frontend
 Place all frontend files in the **/www** directory, with index.html at the root of that folder.
+Express-Java server supports frontend frameworks like React and Vue.
 
 ## Backend
 See https://github.com/Aarkan1/express-java for details on the WebServer API.
@@ -9,6 +10,7 @@ Get all users
 ```java
 app.get("/rest/users", (req, res) -> {
   var users = (List<User>) db.get(User.class, "SELECT * FROM users");
+
   res.json(users);
 });
 ```
@@ -17,9 +19,8 @@ Get one user on id
 ```java
 app.get("/rest/users/:id", (req, res) -> {
   var id = Long.parseLong(req.getParam("id"));
-  var user = (List<User>) db.get(User.class,
-    "SELECT * FROM users WHERE id = ?",
-    statement -> statement.setLong(1, id));
+  var user = (List<User>) db.get(User.class, "SELECT * FROM users WHERE id = ?", List.of(id));
+
   res.json(user.get(0));
 });
 ```
@@ -28,12 +29,9 @@ Post new user
 ```java
 app.post("/rest/users", (req, res) -> {
   var user = (User) req.getBody(User.class);
-  var id = db.update("INSERT INTO users(name, age) VALUES(?,?)", statement -> {
-    statement.setString(1, user.getName());
-    statement.setInt(2, user.getAge());
-  });
-
+  var id = db.update("INSERT INTO users(name, age) VALUES(?, ?)", List.of(user.getName(), user.getAge()));
   user.setId(id);
+
   res.json(user);
 });
 ```
@@ -116,7 +114,7 @@ db.query(connection -> {
 
 ## Libraries used
 
-Express library:
+Express Java library:
 https://github.com/Aarkan1/express-java
 
 SQLite Java: 
@@ -125,8 +123,8 @@ https://www.sqlitetutorial.net/sqlite-java/
 SQL ORM: 
 https://java18.lms.nodehill.se/article/java-orm-object-relational-mapping
 
-Gson:
-https://github.com/google/gson
+JSON parser:
+https://jsoniter.com/
 
 BCrypt: 
 https://github.com/patrickfav/bcrypt
@@ -134,3 +132,5 @@ https://github.com/patrickfav/bcrypt
 ## Possible enhancements
 WebSocket: 
 https://github.com/TooTallNate/Java-WebSocket
+
+Store sessions in a database.
