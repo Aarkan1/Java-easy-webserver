@@ -8,6 +8,7 @@ public class SQLiteDb {
   private Connection conn;
   private boolean useColumnTags = false;
   private String databaseName = "database.db";
+  static SQLiteDb db;
 
   public SQLiteDb() {
     connectToDb();
@@ -35,6 +36,8 @@ public class SQLiteDb {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+
+    db = this;
   }
 
   public List<?> get(Class klass, String query, List params) {
@@ -100,9 +103,14 @@ public class SQLiteDb {
   }
 
   private void setParam(PreparedStatement stmt, int index, Object param) {
-    Class klass = param.getClass();
     index++; // set statement parameters start on index 1
     try {
+      if(param == null) {
+        stmt.setNull(index, 0);
+        return;
+      }
+
+      Class klass = param.getClass();
       if(klass == String.class) {
         stmt.setString(index, (String) param);
       } else if(klass == Integer.class) {
