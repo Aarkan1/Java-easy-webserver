@@ -36,7 +36,7 @@ public class Main {
     });
 
     try {
-      app.use(Middleware.statics(Paths.get("src/main/www").toString()));
+      app.use(Middleware.statics("src/main/www"));
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -148,6 +148,47 @@ db.query(connection -> {
 });
 ```
 
+## File upload
+Over `req.getFormData(NAME)` you receive a list of FileItems from the posted FormData.
+`req.getFormData()` without param returns a Map, where key is the field name and value the list of FileItems.
+Example JavaScript:
+```js
+let files = document.querySelector('input[type=file]').files;
+let formData = new FormData();
+
+for(let file of files) {
+   formData.append('files', file, file.name);
+}
+   
+formData.append('greeting', 'Hello, awesome server!');
+
+fetch('/api/file-upload', {
+   method: 'POST',
+   body: formData
+});
+```
+
+Form data gets stored in lists. If a file is appended we get the byte[] array from the fileItem.get(). You can use this byte[] array to save the file to an uploads-folder. 
+```java
+app.post("/api/file-upload", (req, res) -> {
+  List<FileItem> files = req.getFormData("files");
+  String greeting = req.getFormData("greeting").get(0).getString();
+
+  String filename = files.get(0).getName();
+  byte[] profilePic = files.get(0).get();
+
+  // Process data, save files to disk
+  try (var os = new FileOutputStream("path/to/uploads/" + filename)) {
+    os.write(profilePic);
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+
+  // Prints "Greeting: Hello, awesome server!, Filename: profile-picture.png"
+  res.send("Greeting: " + greeting + ", Filename: " + filename);
+});
+```
+
 ## Libraries used
 
 Express Java library:
