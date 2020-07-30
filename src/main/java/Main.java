@@ -12,6 +12,8 @@ public class Main {
   public static void main(String[] args) {
     var db = new SQLiteDb("database.db");
     var app = new Express();
+    final var PORT = 4000;
+    var socketServer = new SocketServer("localhost", 4001);
 
     new Authentication(app, db);
     new Rest(app, db);
@@ -46,7 +48,11 @@ public class Main {
       res.send(Paths.get("src/main/www/index.html"));
     });
 
-    app.listen(4000);
-    System.out.println("Server started on port 4000");
+    new Thread(socketServer::run).start();
+
+    app.listen(() -> System.out.println("Server started on port " + PORT), PORT);
+
+//    socketServer.run(); // thread blocking, must be called last
   }
+
 }
