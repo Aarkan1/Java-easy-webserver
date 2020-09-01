@@ -1,4 +1,4 @@
-import com.jsoniter.output.JsonStream;
+import com.google.gson.Gson;
 import entities.User;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SocketServer extends WebSocketServer {
   ConcurrentHashMap<String, List<WebSocket>> rooms = new ConcurrentHashMap<>();
+  Gson gson = new Gson();
 
   public SocketServer(String host, int port) {
     super(new InetSocketAddress(host, port));
@@ -39,7 +40,7 @@ public class SocketServer extends WebSocketServer {
     var user = new User("Sven", "svenman", "supersven");
     var message = Map.of("action", "message", "payload", user);
 
-    socket.send(JsonStream.serialize(message)); //This method sends a message to the new client
+    socket.send(gson.toJson(message)); //This method sends a message to the new client
     broadcast( "new connection: " + handshake.getResourceDescriptor() ); //This method sends a message to all clients connected
     System.out.println("new connection to " + socket.getRemoteSocketAddress());
   }

@@ -14,5 +14,8 @@ export default {
   async created() {
     this.$store.dispatch('whoami')
     this.$store.dispatch('fetchUsers')
+  },
+  mounted() {
+    M.AutoInit()
   }
 }
