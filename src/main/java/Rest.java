@@ -20,21 +20,19 @@ public class Rest {
   private void get() {
     app.get("/rest/users", (req, res) -> {
       // db.get return a list of object, and we need to
-      // explicitly cast the list to the type we want - see (List<entities.User>)
+      // explicitly cast the list to the type we want - see (List<User>)
       // We also need to pass which class we're going to
-      // populate the list with - see entities.User.class
+      // populate the list with - see User.class
       var allUsers = (List<User>) db.get(User.class, "SELECT * FROM users");
-      allUsers.forEach(u -> u.setPassword(null)); // always sanitize passwords
 
       res.json(allUsers);
     });
 
     app.get("/rest/users/:id", (req, res) -> {
-      var id = Long.parseLong(req.getParam("id"));
+      var id = Long.parseLong(req.getParam("id")); // Param are always strings, and needs to be parsed
       var user = (List<User>) db.get(User.class,"SELECT * FROM users WHERE id = ?", List.of(id));
-      user.get(0).setPassword(null);
 
-      res.json(user.get(0)); // always sanitize passwords
+      res.json(user.get(0));
     });
   }
 
@@ -49,8 +47,8 @@ public class Rest {
       var user = (User) req.getBody(User.class);
 
       // db.update returns auto incremented id after insertion.
-      var id = db.update("INSERT INTO users(name, username, password) VALUES(?, ?, ?)",
-              List.of(user.getName(), user.getUsername(), user.getPassword()));
+      var id = db.update("INSERT INTO users(firstname, lastname, age) VALUES(?, ?, ?)",
+              List.of(user.getFirstname(), user.getLastname(), user.getAge()));
       user.setId(id);
 
       res.json(user);
@@ -59,9 +57,9 @@ public class Rest {
     // or use a lambda to manually set the PreparedStatement parameters, like:
     /*
       var id = db.update("INSERT INTO users(name, username, password) VALUES(?, ?, ?)", statement -> {
-        statement.setString(1, user.getName());
-        statement.setString(2, user.getUsername());
-        statement.setString(3, user.getPassword());
+        statement.setString(1, user.getFirstname());
+        statement.setString(2, user.getLastname());
+        statement.setInt(3, user.getAge());
       });
      */
   }
