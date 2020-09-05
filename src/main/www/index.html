@@ -3,14 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Vue</title>
-  <link rel="stylesheet" href="/style.css">
+  <title>Document | Home</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div id="app"></div>
-  <!-- Vue will auto import all templates into #app -->
+  <nav>
+    <a href="/index.html">Home</a> | 
+    <a href="/about.html">About</a>
+  </nav>
 
-  <script src="/main.js" type="module"></script>
+  <form id="create-user-form">
+    <h3>Create new user</h3>
+    <input required id="input-firstname" type="text" placeholder="Firstname">
+    <input required id="input-lastname" type="text" placeholder="Lastname">
+    <input required id="input-age" type="number" placeholder="Age">
+    <button type="reset">Cancel</button>
+    <button type="submit" id="create-user-button">Create new user</button>
+  </form>
+
+  <br><br>
+
+  <button id="fetch-users-button">Fetch all users</button>
+
+  <div id="user-list"></div>
+  
+  <script src="/main.js"></script>
 </body>
 </html>

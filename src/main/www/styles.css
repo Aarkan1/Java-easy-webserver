@@ -1,0 +1,38 @@
+* {
+  font-family: sans-serif;
+}
+
+a {
+  text-decoration: none;
+  font-weight: 700;
+  color: rgb(0, 85, 0);
+}
+
+a:hover {
+  color: rgb(0, 153, 0);
+}
+
+form {
+  max-width: 300px;
+}
+
+input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#create-user-button {
+  float: right;
+}
+
+.user-card {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  max-width: 300px;
+}
+
+.user-card > h4, .user-card > p {
+  margin: 0;
+}
