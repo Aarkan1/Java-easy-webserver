@@ -1,11 +1,3 @@
-const createUserForm = document.querySelector('#create-user-form');
-const firstNameInput = document.querySelector('#input-firstname');
-const lastNameInput = document.querySelector('#input-lastname');
-const ageInput = document.querySelector('#input-age');
-
-const fetchUsersButton = document.querySelector('#fetch-users-button');
-const userList = document.querySelector('#user-list');
-
 let users = [];
 
 function renderUsers() {
@@ -20,11 +12,17 @@ function renderUsers() {
 
     list += userCard;
   }
+
+  const userList = document.querySelector('#user-list');
   userList.innerHTML = list;
 }
 
-createUserForm.addEventListener('submit', async function(e) {
-  e.preventDefault(); // prevents page reload
+async function submitForm(event) {
+  event.preventDefault(); // prevents page reload
+
+  const firstNameInput = document.querySelector('#input-firstname');
+  const lastNameInput = document.querySelector('#input-lastname');
+  const ageInput = document.querySelector('#input-age');
   
   let user = {
     firstname: firstNameInput.value,
@@ -45,11 +43,11 @@ createUserForm.addEventListener('submit', async function(e) {
   firstNameInput.value = '';
   lastNameInput.value = '';
   ageInput.value = '';
-})
+}
 
-fetchUsersButton.addEventListener('click', async function(e) {
+async function getUsers() {
   let fetchedUsers = await fetch('/rest/users');
   fetchedUsers = await fetchedUsers.json();
   users = fetchedUsers;
   renderUsers();
-})
+}

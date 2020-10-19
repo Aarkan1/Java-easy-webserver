@@ -9,11 +9,12 @@ import java.nio.file.Paths;
 public class Main {
 
   public static void main(String[] args) {
-    var db = new SQLiteDb("database.db");
-    var app = new Express();
+    var db = new SQLiteDb("database.db"); // connect to database
+    var app = new Express(); // get app-object to register endpoints with
 
-    new Rest(app, db);
+    new Rest(app, db); // cleaner code with separate rest-modules
 
+    // use following to serve static files to frontend
     try {
       app.use(Middleware.statics(Paths.get("src/main/www").toString()));
     } catch (IOException e) {
@@ -25,6 +26,7 @@ public class Main {
       res.send(Paths.get("src/main/www/index.html"));
     });
 
+    // start server after all endpoints has been registered
     app.listen(4000);
     System.out.println("Server started on port 4000");
   }

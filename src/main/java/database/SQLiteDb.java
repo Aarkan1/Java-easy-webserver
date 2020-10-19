@@ -40,6 +40,10 @@ public class SQLiteDb {
     db = this;
   }
 
+  public Connection getConn() {
+    return conn;
+  }
+
   public List<?> get(Class klass, String query, List params) {
     return get(klass, query, stmt -> {
       for(int i = 0; i < params.size(); i++) {

@@ -12,7 +12,7 @@
     <a href="/about.html">About</a>
   </nav>
 
-  <form id="create-user-form">
+  <form id="create-user-form" onsubmit="submitForm(event)">
     <h3>Create new user</h3>
     <input required id="input-firstname" type="text" placeholder="Firstname">
     <input required id="input-lastname" type="text" placeholder="Lastname">
@@ -23,7 +23,7 @@
 
   <br><br>
 
-  <button id="fetch-users-button">Fetch all users</button>
+  <button id="fetch-users-button" onclick="getUsers()">Fetch all users</button>
 
   <div id="user-list"></div>
   

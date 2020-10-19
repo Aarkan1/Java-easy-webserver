@@ -1,5 +1,6 @@
-* {
+body {
   font-family: sans-serif;
+  text-align: center;
 }
 
 a {
@@ -12,7 +13,8 @@ a:hover {
   color: rgb(0, 153, 0);
 }
 
-form {
+form, .user-list {
+  margin: auto;
   max-width: 300px;
 }
 
@@ -31,8 +33,10 @@ input {
   border: 1px solid gray;
   border-radius: 10px;
   max-width: 300px;
+  margin: 10px auto;
 }
 
 .user-card > h4, .user-card > p {
+text-align: start;
   margin: 0;
 }
