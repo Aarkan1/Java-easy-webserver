@@ -4,7 +4,7 @@ Place all frontend files in the **/www** directory, with index.html at the root 
 Express-Java server supports frontend frameworks like React and Vue.
 
 ## Backend
-See https://github.com/Aarkan1/express-java for details on the WebServer API.
+See https://github.com/Aarkan1/java-express for details on the WebServer API.
 
 Get all users
 ```java
@@ -192,22 +192,10 @@ app.post("/api/file-upload", (req, res) -> {
 ## Libraries used
 
 Express Java library:
-https://github.com/Aarkan1/express-java
+https://github.com/Aarkan1/java-express
 
 SQLite Java: 
 https://www.sqlitetutorial.net/sqlite-java/
 
 SQL ORM: 
 https://java18.lms.nodehill.se/article/java-orm-object-relational-mapping
-
-JSON parser:
-https://jsoniter.com/
-
-BCrypt: 
-https://github.com/patrickfav/bcrypt
-
-## Possible enhancements
-WebSocket: 
-https://github.com/TooTallNate/Java-WebSocket
-
-Store sessions in a database.
