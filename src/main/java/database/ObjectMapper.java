@@ -10,10 +10,20 @@ import java.util.*;
 public class ObjectMapper<T> {
   private Class clazz;
   private Map<String, Field> fields = new HashMap<>();
+  private boolean useColumnTags = false;
+
+  public ObjectMapper(Class clazz) {
+    this.clazz = clazz;
+    init();
+  }
 
   public ObjectMapper(Class clazz, boolean useColumnTags) {
     this.clazz = clazz;
+    this.useColumnTags = useColumnTags;
+    init();
+  }
 
+  private void init() {
     List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
     for (Field field : fieldList) {
       if(useColumnTags) {

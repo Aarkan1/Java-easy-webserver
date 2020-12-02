@@ -45,7 +45,7 @@ function sendSomething() {
     payload: socketExample
   }
 
-  ws.send(JSON.stringify(socketExample));
+  ws.send(JSON.stringify(addressedMessage));
 }
 
 function showSomething(message) {
